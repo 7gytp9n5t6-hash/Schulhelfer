@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SchulHelfer</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Outfit:wght@600;700;800;900&family=Playfair+Display:wght@700;800;900&family=Space+Mono:wght@400;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===================== THEME SYSTEM ===================== */
+:root {
+  --trans: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  --radius: 14px;
+  --radius-lg: 20px;
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  --font-head: 'Outfit', sans-serif;
+}
+
+/* ---- Indigo ---- */
+[data-theme-base="indigo"] {
+  --bg:#edeae4;--card:#f7f6f3;--text:#1a1a2e;--text2:#5a5a7a;--text3:#9a9ab0;
+  --border:#ddd9d2;--accent:#4338ca;--accent2:#6d5dfc;--accent-bg:#e8e5f8;
+  --hdr1:#312e81;--hdr2:#4338ca;--hdr3:#6d5dfc;--shadow:0 1px 8px rgba(0,0,0,0.05);
+  --red:#e53e3e;--font-body:'DM Sans',-apple-system,sans-serif;--font-head:'Outfit',sans-serif;
+}
+[data-theme-base="indigo"][data-mode="dark"] {
+  --bg:#0f0e1a;--card:#1a192c;--text:#dddde8;--text2:#9898b0;--text3:#5a5a72;
+  --border:#28283e;--accent:#7c6dfc;--accent2:#9b8fff;--accent-bg:#22204a;
+  --hdr1:#14132a;--hdr2:#252260;--hdr3:#3d38a0;--shadow:0 1px 10px rgba(0,0,0,0.3);
+}
+
+/* ---- Forest ---- */
+[data-theme-base="forest"] {
+  --bg:#e8ebe4;--card:#f2f5ef;--text:#1a2e1a;--text2:#4a6a4a;--text3:#8aa08a;
+  --border:#d0dcc8;--accent:#2d6a4f;--accent2:#40916c;--accent-bg:#dceee0;
+  --hdr1:#1b4332;--hdr2:#2d6a4f;--hdr3:#52b788;--shadow:0 1px 8px rgba(0,30,0,0.05);
+  --red:#e53e3e;--font-body:'Quicksand',-apple-system,sans-serif;--font-head:'Quicksand',sans-serif;
+}
+[data-theme-base="forest"][data-mode="dark"] {
+  --bg:#0d1a12;--card:#162420;--text:#d0e4d0;--text2:#80a880;--text3:#4a6a4a;
+  --border:#243828;--accent:#52b788;--accent2:#74c69d;--accent-bg:#1a3828;
+  --hdr1:#0a1410;--hdr2:#1a3a25;--hdr3:#2d6a4f;--shadow:0 1px 10px rgba(0,0,0,0.35);
+}
+
+/* ---- Rose ---- */
+[data-theme-base="rose"] {
+  --bg:#ede6e2;--card:#f8f3f0;--text:#2e1a24;--text2:#7a5a6a;--text3:#b09aa5;
+  --border:#e0d0c8;--accent:#b5446e;--accent2:#d76d8f;--accent-bg:#f0dce4;
+  --hdr1:#6b213f;--hdr2:#b5446e;--hdr3:#d76d8f;--shadow:0 1px 8px rgba(80,0,30,0.05);
+  --red:#e53e3e;--font-body:'DM Sans',-apple-system,sans-serif;--font-head:'Playfair Display',serif;
+}
+[data-theme-base="rose"][data-mode="dark"] {
+  --bg:#1a0f14;--card:#281c24;--text:#e8d8e0;--text2:#b090a0;--text3:#6a4a5a;
+  --border:#3a2832;--accent:#d76d8f;--accent2:#e890aa;--accent-bg:#3a1a2a;
+  --hdr1:#1a0a12;--hdr2:#4a1a30;--hdr3:#7a3050;--shadow:0 1px 10px rgba(0,0,0,0.35);
+}
+
+/* ---- Cyber ---- */
+[data-theme-base="cyber"] {
+  --bg:#e4e8ee;--card:#eef2f7;--text:#0f172a;--text2:#475569;--text3:#8898aa;
+  --border:#d0d8e2;--accent:#0ea5e9;--accent2:#38bdf8;--accent-bg:#d8eef8;
+  --hdr1:#0c1220;--hdr2:#0c4a6e;--hdr3:#0ea5e9;--shadow:0 1px 8px rgba(0,60,120,0.05);
+  --red:#e53e3e;--font-body:'Space Mono',monospace;--font-head:'Space Mono',monospace;
+}
+[data-theme-base="cyber"][data-mode="dark"] {
+  --bg:#080c14;--card:#101824;--text:#d8e0ea;--text2:#8898aa;--text3:#405060;
+  --border:#1a2838;--accent:#38bdf8;--accent2:#7dd3fc;--accent-bg:#0c2a4a;
+  --hdr1:#060a10;--hdr2:#0a1a30;--hdr3:#0c4a6e;--shadow:0 1px 10px rgba(0,0,0,0.4);
+}
+
+/* ---- Sunset ---- */
+[data-theme-base="sunset"] {
+  --bg:#ede8de;--card:#f6f2ea;--text:#2e1e0e;--text2:#7a6040;--text3:#a89878;
+  --border:#ddd4c0;--accent:#d97706;--accent2:#f59e0b;--accent-bg:#f0e4c8;
+  --hdr1:#78350f;--hdr2:#b45309;--hdr3:#f59e0b;--shadow:0 1px 8px rgba(80,50,0,0.05);
+  --red:#e53e3e;--font-body:'DM Sans',-apple-system,sans-serif;--font-head:'Outfit',sans-serif;
+}
+[data-theme-base="sunset"][data-mode="dark"] {
+  --bg:#14100a;--card:#221c14;--text:#e8dcc8;--text2:#b09870;--text3:#6a5838;
+  --border:#382c1c;--accent:#f59e0b;--accent2:#fbbf24;--accent-bg:#382810;
+  --hdr1:#100a05;--hdr2:#3a2508;--hdr3:#78350f;--shadow:0 1px 10px rgba(0,0,0,0.4);
+}
+
+/* ===================== BASE ===================== */
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height: 100%; overflow: hidden;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  transition: background var(--trans), color var(--trans);
+}
+
+.app {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ===================== HEADER ===================== */
+.header {
+  background: linear-gradient(135deg, var(--hdr1) 0%, var(--hdr2) 40%, var(--hdr3) 100%);
+  padding: max(env(safe-area-inset-top), 12px) 20px 16px;
+  flex-shrink: 0;
+  position: relative; overflow: hidden;
+  transition: background var(--trans);
+}
+.header::before {
+  content:''; position:absolute; top:-50%; left:-20%; width:140%; height:200%;
+  background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,0.08)0%,transparent 60%);
+  pointer-events:none;
+}
+.header-content { position:relative; }
+.header-row {
+  display: flex; align-items: center; gap: 12px;
+}
+.header-left { flex: 1; display: flex; align-items: center; gap: 12px; }
+.header-logo { font-size: 32px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+.header-titles h1 {
+  font-family: var(--font-head); font-size: 22px; font-weight: 900;
+  color: #fff; letter-spacing: -0.5px; line-height: 1.1;
+}
+.header-titles p { font-size: 12px; color: rgba(255,255,255,0.6); font-weight: 500; }
+.header-actions { display: flex; gap: 8px; }
+.hdr-btn {
+  background: rgba(255,255,255,0.15); border: none; border-radius: 12px;
+  width: 40px; height: 40px; color: #fff; font-size: 18px; cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.hdr-btn:active { transform: scale(0.88); }
+
+/* ===================== CONTROLS BAR ===================== */
+.controls {
+  flex-shrink: 0;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg);
+  transition: background var(--trans);
+}
+.period-row { display: flex; gap: 6px; }
+.period-btn {
+  flex: 1; padding: 8px 4px; border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--card); color: var(--text2); font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: all 0.25s; font-family: inherit; text-align: center;
+}
+.period-btn.active { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+
+.tab-row { display: flex; gap: 8px; }
+.tab-btn {
+  flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 10px; border: none; border-radius: 12px; background: var(--card);
+  color: var(--text2); font-size: 14px; font-weight: 700; cursor: pointer;
+  transition: all 0.3s cubic-bezier(.4,0,.2,1); box-shadow: var(--shadow);
+  font-family: inherit; position: relative;
+}
+.tab-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.tab-emoji { font-size: 16px; }
+.badge {
+  position: absolute; top: -4px; right: -4px; background: var(--red); color: #fff;
+  font-size: 10px; font-weight: 800; border-radius: 10px; padding: 1px 6px;
+  min-width: 16px; text-align: center;
+}
+
+/* ===================== SCROLLABLE CONTENT ===================== */
+.scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 12px 16px calc(20px + env(safe-area-inset-bottom));
+}
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeUp 0.3s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* Adaptive grid for wide screens */
+@media (min-width: 700px) {
+  .scroll-area { padding: 16px 24px 32px; }
+  .controls { padding: 10px 24px; }
+  .header { padding-left: 24px; padding-right: 24px; }
+  .subject-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .hw-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+}
+@media (min-width: 1024px) {
+  .scroll-area { padding: 20px 32px 40px; }
+  .controls { padding: 12px 32px; }
+  .header { padding-left: 32px; padding-right: 32px; }
+  .subject-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ===================== SHARED ===================== */
+.add-btn {
+  width: 100%; padding: 14px; border: 2px dashed var(--border);
+  border-radius: var(--radius); background: transparent; color: var(--accent);
+  font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  margin-bottom: 12px; font-family: inherit;
+}
+.add-btn:active { transform: scale(0.98); }
+
+.form-card {
+  background: var(--card); border-radius: var(--radius-lg); padding: 18px;
+  margin-bottom: 12px; box-shadow: var(--shadow); border: 1px solid var(--border);
+  animation: fadeUp 0.25s ease; transition: all var(--trans);
+}
+.form-card h3 { font-family: var(--font-head); font-size: 16px; font-weight: 800; margin-bottom: 12px; }
+.form-label {
+  display: block; font-size: 10px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.8px; margin: 10px 0 4px;
+}
+.form-select, .form-input {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1.5px solid var(--border); font-size: 14px; font-family: inherit;
+  background: var(--bg); color: var(--text); outline: none;
+  transition: border-color 0.2s, background var(--trans), color var(--trans);
+}
+.form-select:focus, .form-input:focus { border-color: var(--accent); }
+.form-actions { display: flex; gap: 8px; margin-top: 14px; }
+.btn-cancel {
+  flex: 1; padding: 10px; border: 1.5px solid var(--border); border-radius: 10px;
+  background: var(--card); color: var(--text2); font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit; transition: all var(--trans);
+}
+.btn-submit {
+  flex: 1; padding: 10px; border: none; border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2)); color: #fff;
+  font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+  transition: transform 0.15s;
+}
+.btn-submit:active { transform: scale(0.97); }
+
+/* ===================== SUBJECT CARDS ===================== */
+.sgc {
+  background: var(--card); border-radius: var(--radius); padding: 14px;
+  margin-bottom: 8px; box-shadow: var(--shadow); cursor: pointer;
+  transition: all var(--trans); border: 1.5px solid transparent;
+}
+.sgc:hover { border-color: var(--accent); }
+.sgc.open { border-color: var(--accent); cursor: default; }
+.sgc-header { display: flex; align-items: center; gap: 10px; }
+.sgc-emoji { font-size: 24px; }
+.sgc-info { flex: 1; }
+.sgc-name { font-size: 14px; font-weight: 700; }
+.sgc-detail { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.sgc-avg { font-family: var(--font-head); font-size: 26px; font-weight: 900; letter-spacing: -1px; text-align: right; }
+.sgc-avg-note { font-size: 10px; font-weight: 600; color: var(--text3); text-align: right; }
+.sgc-no { font-size: 22px; color: var(--text3); font-weight: 300; }
+
+.sgc-expand { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); animation: fadeUp 0.2s ease; }
+.entry-row { display: flex; gap: 10px; margin-bottom: 6px; }
+.entry-col { flex: 1; text-align: center; }
+.entry-col label {
+  display: block; font-size: 10px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 5px;
+}
+.qgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px; }
+.qbtn {
+  height: 32px; border: 1.5px solid var(--border); border-radius: 7px;
+  font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s;
+  font-family: inherit; background: var(--bg); color: var(--text2);
+}
+.qbtn.active { border-color: transparent; color: #fff; }
+.save-row { display: flex; gap: 8px; margin-top: 12px; }
+
+.eg { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--border); }
+.eg-title { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.eg-item { display: flex; align-items: center; gap: 6px; padding: 4px 0; font-size: 12px; }
+.eg-type { font-weight: 600; color: var(--text2); width: 60px; font-size: 11px; }
+.eg-pts { font-family: var(--font-head); font-weight: 800; font-size: 15px; }
+.eg-note { font-size: 11px; color: var(--text3); flex: 1; }
+.eg-date { font-size: 10px; color: var(--text3); }
+.eg-del { border:none; background:none; color:var(--text3); font-size:14px; cursor:pointer; padding:2px; }
+
+/* ===================== HOMEWORK ===================== */
+.hw-card {
+  display: flex; align-items: flex-start; gap: 10px; background: var(--card);
+  border-radius: var(--radius); padding: 12px; margin-bottom: 8px;
+  box-shadow: var(--shadow); transition: all var(--trans);
+}
+.hw-card.done { opacity: 0.45; }
+.hw-check {
+  width: 22px; height: 22px; border-radius: 7px; border: 2.5px solid;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; font-size: 12px; font-weight: 700; color: transparent;
+  transition: all 0.25s;
+}
+.hw-check.checked { color: #fff; }
+.hw-body { flex: 1; min-width: 0; }
+.hw-top { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2px; }
+.stag {
+  display: inline-flex; align-items: center; gap: 3px;
+  padding: 2px 8px; border-radius: 6px; font-size: 11px; font-weight: 700; white-space: nowrap;
+}
+.overdue-tag { font-size: 10px; font-weight: 700; color: var(--red); background: rgba(229,62,62,0.1); padding: 2px 6px; border-radius: 5px; }
+.hw-text { font-size: 13px; color: var(--text); line-height: 1.4; word-break: break-word; }
+.hw-text.strike { text-decoration: line-through; color: var(--text2); }
+.hw-due { font-size: 11px; font-weight: 500; margin-top: 2px; }
+.del-btn { border:none; background:none; color:var(--text3); font-size:16px; cursor:pointer; padding:2px; line-height:1; flex-shrink:0; }
+
+.section-div { display:flex; align-items:center; gap:10px; margin:14px 0 8px; }
+.section-line { flex:1; height:1px; background:var(--border); transition:background var(--trans); }
+.section-label { font-size:10px; font-weight:700; color:var(--text3); text-transform:uppercase; letter-spacing:0.6px; }
+
+.avg-card {
+  background: var(--card); border-radius: var(--radius-lg); padding: 18px; margin-bottom: 12px;
+  box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center;
+  transition: all var(--trans);
+}
+.avg-label { font-size: 10px; font-weight: 700; color: var(--text3); text-transform: uppercase; letter-spacing: 0.8px; }
+.avg-value { font-family: var(--font-head); font-size: 34px; font-weight: 900; letter-spacing: -1.5px; display: block; margin: 2px 0; }
+.avg-note { font-size: 12px; color: var(--text2); font-weight: 500; }
+
+.empty { text-align: center; padding: 40px 20px; }
+.empty-icon { font-size: 48px; display: block; margin-bottom: 8px; }
+.empty-text { font-size: 15px; font-weight: 600; color: var(--text2); }
+.empty-hint { font-size: 12px; color: var(--text3); margin-top: 4px; }
+.hint-text { font-size: 11px; color: var(--text3); text-align: center; margin-bottom: 10px; }
+
+/* ===================== MODE FLASH ===================== */
+.mode-flash {
+  position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999;
+  pointer-events:none; opacity:0;
+}
+.mode-flash.active { animation: modeFlash 0.6s ease-out; }
+@keyframes modeFlash { 0%{opacity:0} 15%{opacity:0.3} 100%{opacity:0} }
+
+/* ===================== THEME PICKER ===================== */
+.theme-overlay {
+  position:fixed; top:0; left:0; right:0; bottom:0; z-index:1000;
+  background:rgba(0,0,0,0.45); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+  display:none; align-items:flex-end; justify-content:center;
+}
+.theme-overlay.show { display:flex; }
+.theme-sheet {
+  background:var(--card); border-radius:var(--radius-lg) var(--radius-lg) 0 0;
+  padding:22px; width:100%; max-width:500px;
+  max-height:65vh; overflow-y:auto;
+  animation:sheetUp 0.4s cubic-bezier(0.34,1.4,0.64,1);
+  transition:background var(--trans);
+}
+@keyframes sheetUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.theme-sheet h3 { font-family:var(--font-head); font-size:16px; font-weight:800; margin-bottom:12px; }
+.theme-option {
+  display:flex; align-items:center; gap:12px; padding:12px; border-radius:var(--radius);
+  cursor:pointer; transition:all 0.2s; margin-bottom:6px; border:2px solid transparent;
+}
+.theme-option:hover { background:var(--accent-bg); }
+.theme-option.active { border-color:var(--accent); background:var(--accent-bg); }
+.theme-swatch {
+  width:38px; height:38px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-size:17px;
+}
+.theme-info { flex:1; }
+.theme-info strong { font-size:14px; display:block; }
+.theme-info span { font-size:11px; color:var(--text3); }
+.theme-close {
+  width:100%; padding:11px; border:none; border-radius:var(--radius);
+  background:var(--accent); color:#fff; font-size:14px; font-weight:700;
+  cursor:pointer; font-family:inherit; margin-top:8px;
+}
+</style>
+</head>
+<body>
+<div class="mode-flash" id="mode-flash"></div>
+
+<div class="app">
+  <!-- FIXED HEADER -->
+  <div class="header">
+    <div class="header-content">
+      <div class="header-row">
+        <div class="header-left">
+          <span class="header-logo">🎓</span>
+          <div class="header-titles">
+            <h1>SchulHelfer</h1>
+            <p>Oberstufe im Griff</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="hdr-btn" onclick="showThemes()">🎨</button>
+          <button class="hdr-btn" id="dark-toggle" onclick="toggleDark()">🌙</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIXED CONTROLS -->
+  <div class="controls">
+    <div class="period-row" id="period-bar"></div>
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="homework" onclick="switchTab('homework')">
+        <span class="tab-emoji">📋</span> Hausaufgaben
+        <span class="badge" id="hw-badge" style="display:none">0</span>
+      </button>
+      <button class="tab-btn" data-tab="grades" onclick="switchTab('grades')">
+        <span class="tab-emoji">📊</span> Noten
+      </button>
+    </div>
+  </div>
+
+  <!-- SCROLLABLE CONTENT -->
+  <div class="scroll-area">
+    <div class="tab-content active" id="tab-homework">
+      <button class="add-btn" id="hw-add-btn" onclick="toggleHwForm(true)">+ Neue Hausaufgabe</button>
+      <div class="form-card" id="hw-form" style="display:none">
+        <h3>Neue Hausaufgabe</h3>
+        <label class="form-label">Fach</label>
+        <select class="form-select" id="hw-subject"></select>
+        <label class="form-label">Aufgabe</label>
+        <input class="form-input" id="hw-text" type="text" placeholder="z.B. S. 42 Nr. 3a-d">
+        <label class="form-label">Fällig am (optional)</label>
+        <input class="form-input" id="hw-date" type="date">
+        <div class="form-actions">
+          <button class="btn-cancel" onclick="toggleHwForm(false)">Abbrechen</button>
+          <button class="btn-submit" onclick="addHomework()">Hinzufügen</button>
+        </div>
+      </div>
+      <div id="hw-open-list" class="hw-grid"></div>
+      <div id="hw-done-section"></div>
+    </div>
+    <div class="tab-content" id="tab-grades">
+      <div id="avg-overview"></div>
+      <p class="hint-text">Tippe auf ein Fach, um Noten einzutragen</p>
+      <div id="subject-list" class="subject-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Theme Picker -->
+<div class="theme-overlay" id="theme-overlay" onclick="if(event.target===this)hideThemes()">
+  <div class="theme-sheet">
+    <h3>Design wählen</h3>
+    <div id="theme-list"></div>
+    <button class="theme-close" onclick="hideThemes()">Fertig</button>
+  </div>
+</div>
+
+<script>
+const SUBJECTS=[
+  {name:"Deutsch",emoji:"📖",color:"#c0392b"},{name:"Mathematik",emoji:"📐",color:"#2563eb"},
+  {name:"Englisch",emoji:"🇬🇧",color:"#7c3aed"},{name:"Französisch",emoji:"🇫🇷",color:"#1d4ed8"},
+  {name:"Spanisch",emoji:"🇪🇸",color:"#ca8a04"},{name:"Latein",emoji:"🏛️",color:"#92400e"},
+  {name:"Geschichte",emoji:"⏳",color:"#a0522d"},{name:"Politik/Wirtschaft",emoji:"🏛️",color:"#1e40af"},
+  {name:"Erdkunde",emoji:"🌍",color:"#15803d"},{name:"Physik",emoji:"⚛️",color:"#0369a1"},
+  {name:"Chemie",emoji:"🧪",color:"#7e22ce"},{name:"Biologie",emoji:"🧬",color:"#16a34a"},
+  {name:"Informatik",emoji:"💻",color:"#0d9488"},{name:"Kunst",emoji:"🎨",color:"#dc2626"},
+  {name:"Musik",emoji:"🎵",color:"#9333ea"},{name:"Sport",emoji:"⚽",color:"#ea580c"},
+  {name:"Religion",emoji:"✝️",color:"#6b7280"},{name:"Ethik",emoji:"🤔",color:"#475569"},
+  {name:"Philosophie",emoji:"💭",color:"#64748b"},{name:"Seminarfach",emoji:"📝",color:"#334155"},
+];
+
+const THEMES=[
+  {id:"indigo",name:"Indigo",desc:"Klassisch & klar",emoji:"💜",sw:"linear-gradient(135deg,#4338ca,#6d5dfc)"},
+  {id:"forest",name:"Forest",desc:"Natürlich & ruhig",emoji:"🌿",sw:"linear-gradient(135deg,#2d6a4f,#52b788)"},
+  {id:"rose",name:"Rosé",desc:"Elegant & warm",emoji:"🌸",sw:"linear-gradient(135deg,#b5446e,#d76d8f)"},
+  {id:"cyber",name:"Cyber",desc:"Technisch & modern",emoji:"⚡",sw:"linear-gradient(135deg,#0c4a6e,#0ea5e9)"},
+  {id:"sunset",name:"Sunset",desc:"Warm & gemütlich",emoji:"🌅",sw:"linear-gradient(135deg,#b45309,#f59e0b)"},
+];
+
+const PERIODS=[{id:"q1",label:"Q1"},{id:"q2",label:"Q2"},{id:"q3",label:"Q3"},{id:"q4",label:"Q4"}];
+const PL={15:"1+",14:"1",13:"1-",12:"2+",11:"2",10:"2-",9:"3+",8:"3",7:"3-",6:"4+",5:"4",4:"4-",3:"5+",2:"5",1:"5-",0:"6"};
+
+function pc(p){if(p>=13)return"#16a34a";if(p>=10)return"#65a30d";if(p>=7)return"#ca8a04";if(p>=4)return"#ea580c";return"#dc2626"}
+function gs(n){return SUBJECTS.find(s=>s.name===n)||SUBJECTS[0]}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
+function fd(d){return new Date(d).toLocaleDateString('de-DE',{day:'2-digit',month:'2-digit',year:'numeric'})}
+
+let homework=JSON.parse(localStorage.getItem('sh3-hw')||'[]');
+let grades=JSON.parse(localStorage.getItem('sh3-gr')||'[]');
+let curP=localStorage.getItem('sh3-p')||'q1';
+let dark=localStorage.getItem('sh3-dk')==='true';
+let curTheme=localStorage.getItem('sh3-th')||'indigo';
+let openS=null,tmpW=null,tmpO=null;
+
+function save(){
+  localStorage.setItem('sh3-hw',JSON.stringify(homework));
+  localStorage.setItem('sh3-gr',JSON.stringify(grades));
+  localStorage.setItem('sh3-p',curP);localStorage.setItem('sh3-dk',dark);
+  localStorage.setItem('sh3-th',curTheme);
+}
+
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme-base',curTheme);
+  document.documentElement.setAttribute('data-mode',dark?'dark':'light');
+  document.getElementById('dark-toggle').textContent=dark?'☀️':'🌙';
+}
+
+function toggleDark(){
+  const f=document.getElementById('mode-flash');
+  f.style.background=dark?'rgba(255,255,255,0.35)':'rgba(0,0,0,0.35)';
+  f.classList.remove('active');
+  void f.offsetWidth;
+  f.classList.add('active');
+  setTimeout(()=>f.classList.remove('active'),700);
+  dark=!dark;save();applyTheme();
+}
+
+function setTheme(id){curTheme=id;save();applyTheme();renderThemeList()}
+function showThemes(){document.getElementById('theme-overlay').classList.add('show');renderThemeList()}
+function hideThemes(){document.getElementById('theme-overlay').classList.remove('show')}
+
+function renderThemeList(){
+  document.getElementById('theme-list').innerHTML=THEMES.map(t=>
+    `<div class="theme-option${curTheme===t.id?' active':''}" onclick="setTheme('${t.id}')">
+      <div class="theme-swatch" style="background:${t.sw}">${t.emoji}</div>
+      <div class="theme-info"><strong>${t.name}</strong><span>${t.desc}</span></div>
+    </div>`
+  ).join('');
+}
+
+function renderPeriods(){
+  document.getElementById('period-bar').innerHTML=PERIODS.map(p=>
+    `<button class="period-btn${curP===p.id?' active':''}" onclick="setP('${p.id}')">${p.label}</button>`
+  ).join('');
+}
+function setP(id){curP=id;openS=null;save();renderPeriods();renderHW();renderGR()}
+function switchTab(t){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
+  document.querySelectorAll('.tab-content').forEach(c=>c.classList.toggle('active',c.id==='tab-'+t));
+}
+
+function popSel(){
+  document.getElementById('hw-subject').innerHTML=SUBJECTS.map(s=>`<option value="${s.name}">${s.emoji} ${s.name}</option>`).join('');
+}
+function toggleHwForm(show){
+  document.getElementById('hw-form').style.display=show?'block':'none';
+  document.getElementById('hw-add-btn').style.display=show?'none':'block';
+  if(show)document.getElementById('hw-text').focus();
+}
+function addHomework(){
+  const t=document.getElementById('hw-text').value.trim();if(!t)return;
+  homework.unshift({id:Date.now(),subject:document.getElementById('hw-subject').value,text:t,due:document.getElementById('hw-date').value||null,done:false,period:curP});
+  save();document.getElementById('hw-text').value='';document.getElementById('hw-date').value='';
+  toggleHwForm(false);renderHW();
+}
+function toggleDone(id){const i=homework.find(h=>h.id===id);if(i)i.done=!i.done;save();renderHW()}
+function removeHW(id){homework=homework.filter(h=>h.id!==id);save();renderHW()}
+
+function renderHW(){
+  const f=homework.filter(h=>!h.period||h.period===curP);
+  const o=f.filter(h=>!h.done),d=f.filter(h=>h.done);
+  const today=new Date(new Date().toDateString());
+  const b=document.getElementById('hw-badge');
+  b.textContent=o.length;b.style.display=o.length>0?'block':'none';
+
+  document.getElementById('hw-open-list').innerHTML=o.length===0&&d.length===0
+    ?`<div class="empty"><span class="empty-icon">📚</span><p class="empty-text">Keine Hausaufgaben in ${PERIODS.find(p=>p.id===curP).label}.</p><p class="empty-hint">Tippe auf "+ Neue Hausaufgabe" um loszulegen!</p></div>`
+    :o.map(h=>{const s=gs(h.subject);const ov=h.due&&new Date(h.due)<today;
+      return`<div class="hw-card"><div class="hw-check" style="border-color:${s.color}" onclick="toggleDone(${h.id})"></div><div class="hw-body"><div class="hw-top"><span class="stag" style="background:${s.color}15;color:${s.color}">${s.emoji} ${s.name}</span>${ov?'<span class="overdue-tag">Überfällig!</span>':''}</div><p class="hw-text">${esc(h.text)}</p>${h.due?`<p class="hw-due" style="color:${ov?'var(--red)':'var(--text3)'}">Fällig: ${fd(h.due)}</p>`:''}</div><button class="del-btn" onclick="removeHW(${h.id})">✕</button></div>`}).join('');
+
+  document.getElementById('hw-done-section').innerHTML=d.length===0?'':
+    `<div class="section-div"><span class="section-line"></span><span class="section-label">Erledigt (${d.length})</span><span class="section-line"></span></div>`+
+    d.map(h=>{const s=gs(h.subject);
+      return`<div class="hw-card done"><div class="hw-check checked" style="border-color:${s.color};background:${s.color}" onclick="toggleDone(${h.id})">✓</div><div class="hw-body"><span class="stag" style="background:${s.color}15;color:${s.color};font-size:11px">${s.emoji} ${s.name}</span><p class="hw-text strike">${esc(h.text)}</p></div><button class="del-btn" onclick="removeHW(${h.id})">✕</button></div>`}).join('');
+}
+
+function gfs(n){return grades.filter(g=>g.subject===n&&g.period===curP)}
+function calcAvg(sg){
+  if(!sg.length)return null;
+  const w=sg.filter(g=>g.type==='S'),o=sg.filter(g=>g.type==='M');
+  const wa=w.length?w.reduce((s,g)=>s+g.points,0)/w.length:null;
+  const oa=o.length?o.reduce((s,g)=>s+g.points,0)/o.length:null;
+  if(wa!==null&&oa!==null)return Math.round((wa+oa)/2*10)/10;
+  return wa!==null?Math.round(wa*10)/10:oa!==null?Math.round(oa*10)/10:null;
+}
+function togS(n){if(openS===n){openS=null}else{openS=n;tmpW=null;tmpO=null}renderGR()}
+function setTG(t,v){if(t==='w')tmpW=tmpW===v?null:v;if(t==='o')tmpO=tmpO===v?null:v;renderGR()}
+function saveGE(n){
+  const now=new Date().toISOString().slice(0,10);
+  if(tmpW!==null)grades.unshift({id:Date.now(),subject:n,points:tmpW,type:'S',period:curP,date:now});
+  if(tmpO!==null)grades.unshift({id:Date.now()+1,subject:n,points:tmpO,type:'M',period:curP,date:now});
+  tmpW=null;tmpO=null;save();renderGR();
+}
+function remGR(id){grades=grades.filter(g=>g.id!==id);save();renderGR()}
+
+function qbtns(type,sel){
+  let h='<div class="qgrid">';
+  for(let p=15;p>=0;p--){const a=sel===p;const c=a?pc(p):'';
+    h+=`<button class="qbtn${a?' active':''}" style="${a?'background:'+c+';border-color:'+c:''}" onclick="event.stopPropagation();setTG('${type}',${p})">${p}</button>`;}
+  h+='</div>';return h;
+}
+
+function renderGR(){
+  const sAvgs=[];
+  SUBJECTS.forEach(s=>{const a=calcAvg(gfs(s.name));if(a!==null)sAvgs.push(a)});
+  const tAvg=sAvgs.length?(sAvgs.reduce((a,b)=>a+b,0)/sAvgs.length).toFixed(1):null;
+
+  document.getElementById('avg-overview').innerHTML=tAvg!==null?`
+    <div class="avg-card">
+      <span class="avg-label">Schnitt ${PERIODS.find(p=>p.id===curP).label}</span>
+      <span class="avg-value" style="color:${pc(Math.round(tAvg))}">${tAvg} Punkte</span>
+      <span class="avg-note">≈ Note ${PL[Math.round(tAvg)]} · ${sAvgs.length} Fächer</span>
+    </div>`:'';
+
+  document.getElementById('subject-list').innerHTML=SUBJECTS.map(s=>{
+    const sg=gfs(s.name),avg=calcAvg(sg);
+    const w=sg.filter(g=>g.type==='S'),o=sg.filter(g=>g.type==='M');
+    const wa=w.length?(w.reduce((a,g)=>a+g.points,0)/w.length).toFixed(1):null;
+    const oa=o.length?(o.reduce((a,g)=>a+g.points,0)/o.length).toFixed(1):null;
+    const isO=openS===s.name;
+
+    let det='Noch keine Noten';
+    if(wa!==null&&oa!==null)det=`✍️ ${wa} · 🗣️ ${oa}`;
+    else if(wa!==null)det=`✍️ Schriftlich: ${wa}`;
+    else if(oa!==null)det=`🗣️ Mündlich: ${oa}`;
+
+    let exp='';
+    if(isO){
+      exp=`<div class="sgc-expand">
+        <div class="entry-row">
+          <div class="entry-col"><label>✍️ Schriftlich</label>${qbtns('w',tmpW)}</div>
+          <div class="entry-col"><label>🗣️ Mündlich</label>${qbtns('o',tmpO)}</div>
+        </div>
+        <div class="save-row">
+          <button class="btn-cancel" onclick="event.stopPropagation();togS('${s.name}')">Abbrechen</button>
+          <button class="btn-submit" onclick="event.stopPropagation();saveGE('${s.name}')" ${tmpW===null&&tmpO===null?'disabled style="opacity:0.5"':''}>Speichern</button>
+        </div>
+        ${sg.length?`<div class="eg"><div class="eg-title">Bisherige Einträge</div>${sg.map(g=>
+          `<div class="eg-item"><span class="eg-type">${g.type==='S'?'✍️ Schr.':'🗣️ Mdl.'}</span><span class="eg-pts" style="color:${pc(g.points)}">${g.points}</span><span class="eg-note">(${PL[g.points]})</span><span class="eg-date">${fd(g.date)}</span><button class="eg-del" onclick="event.stopPropagation();remGR(${g.id})">✕</button></div>`
+        ).join('')}</div>`:''}
+      </div>`;
+    }
+
+    return`<div class="sgc${isO?' open':''}" onclick="${isO?'':`togS('${s.name}')`}">
+      <div class="sgc-header">
+        <span class="sgc-emoji">${s.emoji}</span>
+        <div class="sgc-info"><div class="sgc-name">${s.name}</div><div class="sgc-detail">${det}</div></div>
+        ${avg!==null?`<div><div class="sgc-avg" style="color:${pc(Math.round(avg))}">${avg}</div><div class="sgc-avg-note">${PL[Math.round(avg)]}</div></div>`:`<span class="sgc-no">—</span>`}
+      </div>${exp}</div>`;
+  }).join('');
+}
+
+document.getElementById('hw-text').addEventListener('keydown',e=>{if(e.key==='Enter')addHomework()});
+applyTheme();popSel();renderPeriods();renderHW();renderGR();
+</script>
+</body>
+</html>
